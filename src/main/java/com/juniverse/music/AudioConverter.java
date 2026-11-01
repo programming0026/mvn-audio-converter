@@ -8,6 +8,8 @@ import ws.schild.jave.progress.EncoderProgressListener;
 import ws.schild.jave.info.MultimediaInfo;
 import java.io.File;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
 /**
  * Convierte archivos de audio entre formatos (MP3, WAV, OGG, AAC, FLAC y WMA) con la biblioteca JAVE (FFmpeg)
  * y muestra una barra de progreso en la consola.
@@ -15,6 +17,8 @@ import java.io.File;
  * @author ajuar
  */
 public class AudioConverter {
+    private static final Logger LOGGER = AppLogger.get(AudioConverter.class);
+
 
     // Clase para manejar el progreso de la conversión
     private static class ProgressListener implements EncoderProgressListener {
@@ -198,12 +202,12 @@ public class AudioConverter {
             }
 
         } catch (EncoderException e) {
-            System.err.println("\nError durante la conversion: " + e.getMessage());
-            e.printStackTrace(System.err);
+            LOGGER.severe("\nError durante la conversion: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             System.exit(1);
         } catch (IllegalArgumentException e) {
-            System.err.println("\nError inesperado: " + e.getMessage());
-            e.printStackTrace(System.err);
+            LOGGER.severe("\nError inesperado: " + e.getMessage());
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
             System.exit(1);
         }
     }
@@ -215,13 +219,13 @@ public class AudioConverter {
      private static void validateFile(File inputFile) {
         // Verificar que el archivo de entrada existe
         if (!inputFile.exists()) {
-            System.err.println("Error: El archivo de entrada '" + inputFile.getName() + "' no existe.");
+            LOGGER.severe("Error: El archivo de entrada '" + inputFile.getName() + "' no existe.");
             System.exit(1);
         }
 
         // Verificar que el archivo de entrada es un archivo (no directorio)
         if (!inputFile.isFile()) {
-            System.err.println("Error: '" + inputFile.getName() + "' no es un archivo válido.");
+            LOGGER.severe("Error: '" + inputFile.getName() + "' no es un archivo válido.");
             System.exit(1);
         }
     }
